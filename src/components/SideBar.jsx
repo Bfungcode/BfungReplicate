@@ -1,8 +1,58 @@
-import React from "react";
-import { Fragment, useState } from "react";
+import { useLayoutEffect, Fragment, useState, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { MenuIcon, XIcon, FireIcon } from "@heroicons/react/outline";
+import { FireIcon, XIcon, MenuIcon, TrashIcon } from "@heroicons/react/outline";
+import MainBar from "./MainBar";
 
+const messages = [
+  {
+    text: "Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 1",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 2 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 2",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 3 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 3",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 4 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 4",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 5 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 5",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 1",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 2 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 2",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 3 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 3",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 4 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 4",
+  },
+  {
+    text: "Latest Instagram Update: What You Need to Know 5 Latest Instagram Update: What You Need to Know 1 Latest Instagram Update: What You Need to Know 5",
+  },
+];
+const tabs = [
+  { name: "Helpful", href: "#", count: "52", current: false },
+  { name: "Entertaining", href: "#", count: "6", current: false },
+  { name: "Engaging", href: "#", count: "4", current: true },
+  { name: "Challanges", href: "#", current: false },
+  { name: "Trending", href: "#", current: false },
+  { name: "How to", href: "#", count: "6", current: false },
+  { name: "Humor", href: "#", count: "4", current: false },
+  { name: "Promotional", count: "6", href: "#", current: false },
+  { name: "Q&A", count: "6", href: "#", current: false },
+  { name: "Trending", count: "6", href: "#", count: "4", current: false },
+  { name: "Cats", count: "6", href: "#", current: false },
+  { name: "Daily", count: "6", href: "#", current: false },
+  { name: "Q&A", count: "6", href: "#", current: false },
+  { name: "Trending", count: "6", href: "#", count: "4", current: false },
+  { name: "Cats", count: "6", href: "#", current: false },
+  { name: "Daily", count: "6", href: "#", current: false },
+];
 const navigation = [
   { name: "Ideas", href: "#", icon: FireIcon, current: true },
 ];
@@ -11,10 +61,31 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const SideBar = () => {
+export default function SideBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const checkbox = useRef();
+  const [checked, setChecked] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [selectedPeople, setSelectedPeople] = useState([]);
+  const [selectedMessages, setSelectedMessages] = useState([]);
+
+  useLayoutEffect(() => {
+    const isIndeterminate =
+      selectedMessages.length > 0 && selectedMessages.length < messages.length;
+    setChecked(selectedMessages.length === messages.length);
+    setIndeterminate(isIndeterminate);
+    if (checkbox.current) {
+      checkbox.current.indeterminate = isIndeterminate;
+    }
+  }, [selectedMessages]);
+
+  function toggleAll() {
+    setSelectedMessages(checked || indeterminate ? [] : messages);
+    setChecked(!checked && !indeterminate);
+    setIndeterminate(false);
+  }
   return (
-    <div className="w-full h-full">
+    <>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -118,15 +189,10 @@ const SideBar = () => {
                 </div>
               </div>
             </Transition.Child>
-            <div className="flex-shrink-0 w-14" aria-hidden="true">
-              {/* Force sidebar to shrink to fit close icon */}
-            </div>
+            <div className="flex-shrink-0 w-14" aria-hidden="true"></div>
           </Dialog>
         </Transition.Root>
-
-        {/* Static sidebar for desktop */}
         <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex-1 flex flex-col min-h-0 bg-indigo-700">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
@@ -189,10 +255,148 @@ const SideBar = () => {
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
+          <main className="flex-1">
+            <div className="py-8 px-8">
+              <div className="max-w-7xl mx-0 px-0 sm:px-6 md:px-0">
+                <h1 className="text-2xl font-semibold text-gray-900">Ideas</h1>
+              </div>
+              <div>
+                <div className="sm:hidden">
+                  <label htmlFor="tabs" className="sr-only">
+                    Select a tab
+                  </label>
+                  <select
+                    id="tabs"
+                    name="tabs"
+                    className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    defaultValue={tabs.find((tab) => tab.current).name}
+                  >
+                    {tabs.map((tab) => (
+                      <option key={tab.name}>{tab.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="hidden sm:block">
+                  <div className="border-b border-gray-200">
+                    <nav
+                      className="-mb-px flex space-x-8 scrollbar-hide overflow-x-scroll"
+                      aria-label="Tabs"
+                    >
+                      {tabs.map((tab) => (
+                        <a
+                          key={tab.name}
+                          href={tab.name}
+                          className={classNames(
+                            tab.current
+                              ? "border-indigo-500 text-indigo-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200",
+                            "whitespace-nowrap flex py-4 px-1 border-b-2 font-medium text-sm"
+                          )}
+                          aria-current={tab.current ? "page" : undefined}
+                        >
+                          {tab.name}
+                          {tab.count ? (
+                            <span
+                              className={classNames(
+                                tab.current
+                                  ? "bg-indigo-100 text-indigo-600"
+                                  : "bg-gray-100 text-gray-900",
+                                "hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block"
+                              )}
+                            >
+                              {tab.count}
+                            </span>
+                          ) : null}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+                <div className="flex flex-column p-2 mt-8">
+                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-0">
+                    <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                      {selectedMessages.length > 0 && (
+                        <div className="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16"></div>
+                      )}
+                      <div className="flex flex-col">
+                        <table className="min-w-full table-fixed divide-y divide-gray-300">
+                          <tbody className="divide-y divide-gray-200 bg-white">
+                            {messages.map((message) => (
+                              <tr
+                                key={message.text}
+                                className={
+                                  selectedMessages.includes(message)
+                                    ? "bg-gray-50"
+                                    : undefined
+                                }
+                              >
+                                <td className="w-16 px-8 sm:w-20 sm:px-10 relative">
+                                  {selectedMessages.includes(message) && (
+                                    <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
+                                  )}
+                                  <input
+                                    type="checkbox"
+                                    className="absolute left-1/2 -ml-2 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    value={message.text}
+                                    checked={selectedMessages.includes(message)}
+                                    onChange={(e) =>
+                                      setSelectedMessages(
+                                        e.target.checked
+                                          ? [...selectedMessages, message]
+                                          : selectedMessages.filter(
+                                              (m) => m !== message
+                                            )
+                                      )
+                                    }
+                                  />
+                                </td>
+                                <td
+                                  className={`py-6 sm:py-4 text-base font-medium overflow-hidden sm:whitespace-nowrap md:whitespace-normal`}
+                                >
+                                  {message.text}
+                                </td>
+                                <td className="py-6 sm:py-4">
+                                  <TrashIcon className="w-8 h-6 text-indigo-600 mr-1" />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <nav
+                        className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+                        aria-label="Pagination"
+                      >
+                        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-8">
+                          <p className="text-sm text-gray-700">
+                            Showing <span className="font-medium">1</span> to
+                            <span className="font-medium">10</span> of
+                            <span className="font-medium">20</span> results
+                          </p>
+                        </div>
+                        <div className="flex justify-end mt-2 sm:mt-0">
+                          <a
+                            href="#"
+                            className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                          >
+                            Previous
+                          </a>
+                          <a
+                            href="#"
+                            className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                          >
+                            Next
+                          </a>
+                        </div>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default SideBar;
+}

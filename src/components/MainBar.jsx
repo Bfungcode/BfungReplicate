@@ -11,7 +11,6 @@ const tabs = [
   { name: "Q&A", num: "6", href: "#", current: false },
 ];
 import { TrashIcon } from "@heroicons/react/outline";
-s;
 
 const messages = [
   {

@@ -1,10 +1,11 @@
 import React from "react";
-import SideBar from "./components/SideBar";
+import Main from "./components/Main";
+import { messages, tabs, navigation } from "../src/components/Data";
 function App() {
   return (
     <div>
       <div className="m-0 p-0">
-        <SideBar />
+        <Main messages={messages} tabs={tabs} navigation={navigation} />
       </div>
     </div>
   );
